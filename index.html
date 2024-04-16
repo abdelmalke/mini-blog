@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="st.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com/" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+<body>
+    <header class="bg-transparant my-5 mx-4">
+        <nav class="flex justify-between items-center w-[92%] mx-auto text-black">
+            <div>
+                <img src="c:\Users\PC\Downloads\BA Logo.jpeg" alt="logo" class="w-30 h-10">
+            </div>
+            <div class="nav-links duration-500 md:static absolute bg-transparant   justify-center flex bg-opacity-90 md:min-h-fit min-h-[60vh] left-0 top-[-100%] md:w-auto w-full flex items-center px-5">
+                <ul class="flex flex-col lg:items-center lg:gap-8 gap-6 lg:justify-center justify-between md:flex-row lg:flex-row uppercase">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="Ajoute.html">Ajoute</a></li>
+                </ul>
+            </div>
+            <div>
+            </div>
+            <div>
+                <ion-icon name="search-outline" class="text-3xl"></ion-icon>
+                <ion-icon onclick="onToggleMenu()" name="menu" class="text-3xl cursor-pointer md:hidden"></ion-icon>
+            </div>
+        </nav>
+    </header>
+    <div id="blogPosts" class="my-5 mx-4">Blog posts</div> 
+    <script>
+        function displayBlogPosts(blogPosts) {
+            var blogPostsDiv = document.getElementById("blogPosts");
+            blogPostsDiv.innerHTML = ""; 
+            blogPosts.forEach(function(post, index) {
+                var postElement = document.createElement("div");
+                postElement.innerHTML = "<h2>" + post.title + "</h2><p>" + post.description + "</p>";
+                if (post.image) {
+                    postElement.innerHTML += "<img src='" + post.image + "' alt='Blog Post Image'>";
+                }
+                var editButton = document.createElement("button");
+                editButton.textContent = "Edit";
+                editButton.className = "edit-button";
+                editButton.onclick = function() {
+                    editBlogPost(index);
+                };
+                postElement.appendChild(editButton);
+                blogPostsDiv.appendChild(postElement);
+            });
+        }
+
+        function editBlogPost(index) {
+            var blogPosts = JSON.parse(localStorage.getItem("blogPosts"));
+
+            var newTitle = prompt("Enter new title:", blogPosts[index].title);
+            var newDescription = prompt("Enter new description:", blogPosts[index].description);
+            var newImage = prompt("Enter new image URL:", blogPosts[index].image);
+
+            blogPosts[index] = {
+                title: newTitle,
+                description: newDescription,
+                image: newImage
+            };
+
+            localStorage.setItem("blogPosts", JSON.stringify(blogPosts));
+
+            displayBlogPosts(blogPosts);
+        }
+
+        window.onload = function() {
+            var existingBlogPosts = localStorage.getItem("blogPosts");
+            if (existingBlogPosts) {
+                existingBlogPosts = JSON.parse(existingBlogPosts);
+                displayBlogPosts(existingBlogPosts);
+            }
+        };
+    </script>
+    <script src="sct.js"></script> 
+</body>
+</html>
