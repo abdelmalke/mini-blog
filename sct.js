@@ -47,12 +47,6 @@ document.getElementById("blogPostForm").addEventListener("submit", function(even
         reader.readAsDataURL(image);
     }
 });
-function deleteBlogPost(index) {
-    var blogPosts = JSON.parse(localStorage.getItem("blogPosts"));
-    blogPosts.splice(index, 1);
-    localStorage.setItem("blogPosts", JSON.stringify(blogPosts));
-    displayBlogPosts(blogPosts);
-}
 
 
 
