@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="st.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com/" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+<body>
+    <header class="bg-transparant my-5 mx-4">
+        <nav class="flex justify-between items-center w-[92%] mx-auto text-black">
+            <div>
+                <img src="img/BA Logo.jpeg" alt="logo" class="w-30 h-10">
+            </div>
+            <div class="nav-links duration-500 md:static absolute bg-transparant   justify-center flex bg-opacity-90 md:min-h-fit min-h-[60vh] left-0 top-[-100%] md:w-auto w-full flex items-center px-5">
+                <ul class="flex flex-col lg:items-center lg:gap-8 gap-6 lg:justify-center justify-between md:flex-row lg:flex-row uppercase">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="Ajoute.html">Ajoute</a></li>
+                </ul>
+            </div>
+            <div>
+                <!-- <button id="edit-button" class="edit-button" >edit</button> -->
+            </div>
+            <!-- Modal -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <input type="text" id="newTitle" placeholder="Enter new title">
+      <input type="text" id="newDescription" placeholder="Enter new description">
+      <input type="text" id="newImage" placeholder="Enter new image URL">
+      <button onclick="saveChanges()">Save Changes</button>
+    </div>
+  </div>
+  
+            <div>
+                <div>  <input type="text" id="searsh">
+                <div id="result" style="display: none;" class="bg-blue-500 w-96"></div>
+            </div>
+                <ion-icon  name="search-outline" class="text-3xl"></ion-icon>
+                <ion-icon onclick="onToggleMenu()" name="menu" class="text-3xl cursor-pointer md:hidden"></ion-icon>
+            </div>
+            
+        </nav>
+        
+    </header>
+    <div id="blogPosts" class="my-5 mx-4">Blog posts</div> 
+    <script>
+function displayBlogPosts(blogPosts) {
+    var blogPostsDiv = document.getElementById("blogPosts");
+    blogPostsDiv.innerHTML = ""; 
+    blogPosts.forEach(function(post, index) {
+        var postElement = document.createElement("div");
+        postElement.innerHTML = "<h2>" + post.title + "</h2><p>" + post.description + "</p>";
+        if (post.image) {
+            postElement.innerHTML += "<img src='" + post.image + "' alt='Blog Post Image'>";
+        }
+        
+        // Create edit button for each post
+        var editButton = document.createElement("button");
+        editButton.textContent = "Edit";
+        editButton.className = "edit-button";
+        editButton.onclick = function() {
+            editBlogPost(index);
+        };
+        postElement.appendChild(editButton); 
+        var deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.className = "delete-button";
+        deleteButton.onclick = function() {
+            deleteBlogPost(index);
+        };
+        function deleteBlogPost(index) {
+            var blogPosts = JSON.parse(localStorage.getItem("blogPosts"));
+            blogPosts.splice(index, 1); 
+            localStorage.setItem("blogPosts", JSON.stringify(blogPosts));
+            displayBlogPosts(blogPosts); 
+        }
+        postElement.appendChild(deleteButton); 
+
+        blogPostsDiv.appendChild(postElement);
+    });
+}
+
+// Get the modal
+var modal = document.getElementById("editModal");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on the button, open the modal
+function editBlogPost(index) {
+    modal.style.display = "block";
+
+    // Populate the modal fields with existing values
+    var blogPosts = JSON.parse(localStorage.getItem("blogPosts"));
+    document.getElementById("newTitle").value = blogPosts[index].title;
+    document.getElementById("newDescription").value = blogPosts[index].description;
+    document.getElementById("newImage").value = blogPosts[index].image;
+
+    // Save the index for later use
+    modal.dataset.index = index;
+}
+
+
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+// Function to save changes when "Save Changes" button is clicked
+function saveChanges() {
+    var index = modal.dataset.index;
+    var newTitle = document.getElementById("newTitle").value;
+    var newDescription = document.getElementById("newDescription").value;
+    var newImage = document.getElementById("newImage").value;
+
+    var blogPosts = JSON.parse(localStorage.getItem("blogPosts"));
+    blogPosts[index] = {
+        title: newTitle,
+        description: newDescription,
+        image: newImage
+    };
+
+    localStorage.setItem("blogPosts", JSON.stringify(blogPosts));
+
+    modal.style.display = "none";
+    displayBlogPosts(blogPosts);
+}
+
+        displayBlogPosts(blogPosts);
+        window.onload = function() {
+            var existingBlogPosts = localStorage.getItem("blogPosts");
+            if (existingBlogPosts) {
+                existingBlogPosts = JSON.parse(existingBlogPosts);
+                displayBlogPosts(existingBlogPosts);
+            }
+        };
+    </script>
+    <script src="sct.js"></script>
+</body>
+</html>
